@@ -25,7 +25,6 @@ app.use(cookieParser())
 app.use(passport.initialize());
 app.use(passport.session())
 require('./middleware/passport')(passport);
-
 app.use('/', router);
-
 app.listen(port, () => console.log(`listening  http://localhost:${port}`))
+console.log("Good day")
