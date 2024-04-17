@@ -8,7 +8,7 @@ const tokenService = require("./../service/token-service")
 const passport = require('passport');
 const Local = require("passport-local").Strategy
 
-router.post('/check', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.send({ user: req.user })
 })
 
