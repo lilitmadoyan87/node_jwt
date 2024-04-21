@@ -13,12 +13,16 @@ app.use(express.urlencoded({
     extended: false
 }))
 
-app.use(cors())
+app.use(cors({ 
+    origin: "http://localhost:3000/*"
+})) 
+
+// app.use(cors())  բոլորը 
 app.use(session({
     secret: 'topSecret',
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: true } 
+    cookie: { secure: true } // resave, saveUninitialized պետք է լինեն true
 }));
 
 app.use(cookieParser())

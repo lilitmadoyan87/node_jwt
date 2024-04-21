@@ -6,6 +6,7 @@ const UserDto = require('../dtos/user-dto');
 const crypto = require("crypto")
 const tokenService = require("./../service/token-service")
 const passport = require('passport');
+const { MainController } = require("../controller/MainController");
 const Local = require("passport-local").Strategy
 
 router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -20,6 +21,7 @@ router.post('/register', async (req, res, next) => {
             return res.status(401).send(`${email} is already exist!`)
         }
         const emailToken = await crypto.randomBytes(3).toString('hex').toUpperCase();
+        
         const user = await User.create({ name, surname, email, password: bcrypt.hashSync(password, 10), emailToken });
         const userDto = new UserDto({ ...user.dataValues })
         const tokens = tokenService.generateToken({ ...userDto });
@@ -96,5 +98,13 @@ passport.deserializeUser(async function (id, done) {
     });
     done(null, user);
 });
+
+
+router.get("/allProducts", MainController.getProducts)
+router.get("/allProducts/:id", MainController.getProductById)
+router.get("/allProductsByUserId", passport.authenticate('jwt', { session: false }), MainController.getProductsByUserId)
+router.post('/addProduct', passport.authenticate('jwt', { session: false }), MainController.addProduct)
+router.delete("/deleteProduct/:id", passport.authenticate('jwt', { session: false }), MainController.deleteProduct)
+router.patch("/updateProduct/:id", passport.authenticate('jwt', { session: false }), MainController.updateProduct)
 
 module.exports = router
